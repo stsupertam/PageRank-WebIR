@@ -18,4 +18,4 @@ with codecs.open('urlmap.txt', 'w', 'utf-8') as urlmap:
                             continue
                 url = filename_split[1:]
                 url = str.join('/', url)
-                urlmap.write(url + '\n')
+                urlmap.write('http://' + url + '\n')
