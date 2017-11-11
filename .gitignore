@@ -106,6 +106,6 @@ ENV/
 data*
 .env
 *.csv
-urlmap.txt
+urlmap*.txt
 html/
 robotlists.txt
