@@ -43,11 +43,9 @@ with open('webgraph.txt', 'w') as file:
         urls = getFullUrl(line, soup)
         links = []
         for url in urls:
-            try:
+            if(url in url_list):
                 if(url_list.index(url) + 1 not in links and url != line):
                     links.append(url_list.index(url) + 1)
-            except ValueError:
-                pass
 
         if(len(links) != 0):
             text = ",".join(map(str, links))
