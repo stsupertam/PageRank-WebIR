@@ -44,8 +44,8 @@ with open('webgraph.txt', 'w') as file:
         links = []
         for url in urls:
             try:
-                if(url_list.index(url) not in links and url != line):
-                    links.append(url_list.index(url))
+                if(url_list.index(url) + 1 not in links and url != line):
+                    links.append(url_list.index(url) + 1)
             except ValueError:
                 pass
 
