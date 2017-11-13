@@ -38,9 +38,8 @@ def pagerank(P, size, error, alpha):
     num_iter = 0
 
     while(np.sum(np.abs(ro-r)) > error):
+        print('Iteration : %d Error : %0.10f' % (num_iter, np.sum(np.abs(ro-r))))
         ro = r.copy()
-        if(num_iter % 100):
-            print('Iteration : %d Error : %0.10f' % (num_iter, np.sum(np.abs(ro-r))))
 
         for i in range(0, size):
             p = np.array(P[:,i].todense())[:,0]
@@ -61,7 +60,7 @@ def writefile(rank, output):
 
 
 if __name__=='__main__':
-    filename = 'webgraph_test.txt'
+    filename = 'webgraph.txt'
     output = 'pagerank.txt'
     graph = readfile(filename)
     A = create_sparse_matrix(graph)
