@@ -2,6 +2,17 @@ import codecs
 import hashlib
 from bs4 import BeautifulSoup
 
+
+def readfile(filename):
+    url_list = []
+    try:
+        with codecs.open(filename, 'r', 'utf-8') as file:
+            url_list = file.read().splitlines()
+    except Exception:
+        print('Cannot open file')
+    return url_list
+
+
 def getFullUrl(line, soup):
     url_list = []
     line = line.replace('http://', '').split('/')
@@ -30,30 +41,36 @@ def getFullUrl(line, soup):
     return url_list
 
 
-with codecs.open('urlmap.txt', 'r', 'utf-8') as file:
-    url_list = file.read().splitlines()
+def webgraph(url_list, output):
+    i = 0
+    try:
+        with open(output, 'w') as file:
+            for line in url_list:
+                path = line.replace('http://', '')
+                path = 'html\\' + path.replace('/', '\\')
+                soup = BeautifulSoup(codecs.open(path.strip(), 'r', 'utf-8'), 'lxml')
 
-i = 0
-with open('webgraph.txt', 'w') as file:
-    for line in url_list:
-        path = line.replace('http://', '')
-        path = 'html\\' + path.replace('/', '\\')
-        soup = BeautifulSoup(codecs.open(path.strip(), 'r', 'utf-8'), 'lxml')
+                urls = getFullUrl(line, soup)
+                links = []
+                for url in urls:
+                    if(url in url_list):
+                        if(url_list.index(url) + 1 not in links and url != line):
+                            links.append(url_list.index(url) + 1)
 
-        urls = getFullUrl(line, soup)
-        links = []
-        for url in urls:
-            if(url in url_list):
-                if(url_list.index(url) + 1 not in links and url != line):
-                    links.append(url_list.index(url) + 1)
+                if(len(links) != 0):
+                    text = ",".join(map(str, links))
+                else:
+                    text = '-'
+                file.write(text + '\n')
 
-        if(len(links) != 0):
-            text = ",".join(map(str, links))
-        else:
-            text = '-'
-        file.write(text + '\n')
-
-        print(' \rProcess File :%d/%d' % (i, len(url_list)), end = '',flush=False)
-        i += 1
+                print(' \rProcess File :%d/%d' % (i, len(url_list)), end = '',flush=False)
+                i += 1
+    except Exception:
+        print('Create webgraph error')
 
 
+if __name__=='__main__':
+    filename = 'urlmap.txt'
+    output = 'webgraph.txt'
+    url_list = readfile(filename)
+    webgraph(url_list, output)

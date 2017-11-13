@@ -107,4 +107,5 @@ data*
 .env
 *.csv
 *.txt
+*.zip
 html/
