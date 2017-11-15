@@ -47,7 +47,7 @@ def webgraph(url_list, output):
         with open(output, 'w') as file:
             for line in url_list:
                 path = line.replace('http://', '')
-                path = 'html\\' + path.replace('/', '\\')
+                path = 'html_bu\\' + path.replace('/', '\\')
                 soup = BeautifulSoup(codecs.open(path.strip(), 'r', 'utf-8'), 'lxml')
 
                 urls = getFullUrl(line, soup)

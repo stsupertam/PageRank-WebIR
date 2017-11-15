@@ -15,6 +15,7 @@ def readfile(filename):
 
 def create_sparse_matrix(graph):
     size = len(graph)
+    rankleak_idx = []
     for i in range(size):
         graph[i] = graph[i].split(',')
         if('-' not in graph[i]):
@@ -26,11 +27,13 @@ def create_sparse_matrix(graph):
         if('-' not in graph[i]):
             n = len(graph[i])
             P[i][graph[i]] = 1 / float(n)
+        else:
+            rankleak_idx.append(i)
 
-    return csc_matrix(P,dtype=np.float)
+    return (csc_matrix(P,dtype=np.float), rankleak_idx)
 
 
-def pagerank(P, size, error, alpha):
+def pagerank(P, rankleak_idx, size, error, alpha):
 
     e = np.ones(size) / float(size)
     r = np.ones(size) / float(size)
@@ -43,8 +46,8 @@ def pagerank(P, size, error, alpha):
 
         for i in range(0, size):
             p = np.array(P[:,i].todense())[:,0]
-            if(sum(p) == 0):
-                p = np.ones(size) / float(size)
+            if(i in rankleak_idx):
+                p[i] = 1 / float(size)
             r[i] = ro.dot((p*alpha) + (e*(1-alpha)))
         num_iter += 1
     return r
@@ -63,10 +66,10 @@ if __name__=='__main__':
     filename = 'webgraph.txt'
     output = 'pagerank.txt'
     graph = readfile(filename)
-    A = create_sparse_matrix(graph)
+    A, rankleak_idx = create_sparse_matrix(graph)
     start_time = time()
-    rank = pagerank(A, len(graph), 0.0001, 0.85)
+    rank = pagerank(A, rankleak_idx, len(graph), 0.0001, 0.85)
     end_time = time()
-    print('Finish time : %d' % (start_time - end_time))
+    print('Finish time : %d' % (end_time - start_time))
     writefile(rank, output)
 
