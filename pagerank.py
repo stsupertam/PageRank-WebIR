@@ -16,14 +16,14 @@ def readfile(filename):
 def create_sparse_matrix(graph):
     size = len(graph)
     rankleak_idx = []
-    for i in range(size):
+    for i in range(0, size):
         graph[i] = graph[i].split(',')
         if('-' not in graph[i]):
             graph[i] = [int(j) - 1 for j in graph[i]]
 
     P = np.zeros(shape=(size, size))
 
-    for i in range(size):
+    for i in range(0, size):
         if('-' not in graph[i]):
             n = len(graph[i])
             P[i][graph[i]] = 1 / float(n)
@@ -34,7 +34,6 @@ def create_sparse_matrix(graph):
 
 
 def pagerank(P, rankleak_idx, size, error, alpha):
-
     e = np.ones(size) / float(size)
     r = np.ones(size) / float(size)
     ro = np.zeros(size)
